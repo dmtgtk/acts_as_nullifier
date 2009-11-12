@@ -24,7 +24,7 @@ module ActiveRecord
       #   end
       #
       def acts_as_nullifier(options = {})
-        self.class.instance_eval do
+        (class << self; self; end).instance_eval do
           attr_accessor :nullable_attributes
         end
         only = [options[:only] || self.columns.map { |column| column.name.to_sym }].flatten
