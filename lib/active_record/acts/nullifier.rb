@@ -45,7 +45,7 @@ module ActiveRecord
         if self.class.nullable_attributes.include? name.to_sym
           column = column_for_attribute(name)
           if column && column.type == :string && column.null == true
-            value = nil if value.blank?
+            value = nil if value == ''
           end
         end
         super(name, value)

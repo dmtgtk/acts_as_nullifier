@@ -57,12 +57,12 @@ class NullifierTest < Test::Unit::TestCase  #:nodoc:
     assert_equal('not_nullable', t.not_nullable)
     
     t.nullable1 = ''
-    t.nullable2 = ''
+    t.nullable2 = ' '
     t.not_nullable = ''
     t.save
     t.reload
     assert_nil(t.nullable1)
-    assert_nil(t.nullable2)
+    assert_not_nil(t.nullable2)
     assert_not_nil(t.not_nullable)
     assert_equal('', t.not_nullable)
   end
