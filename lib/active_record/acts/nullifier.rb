@@ -24,12 +24,19 @@ module ActiveRecord
       #   end
       #
       def acts_as_nullifier(options = {})
-        (class << self; self; end).instance_eval do
-          attr_accessor :nullable_attributes
+        @nullable_attributes = nil
+        
+        self.metaclass.instance_eval do
+          define_method :nullable_attributes do
+            if @nullable_attributes.nil?
+              only = [options[:only] || self.columns.map { |column| column.name.to_sym }].flatten
+              except = [options[:except] || []].flatten
+              @nullable_attributes = only - except
+            end
+            @nullable_attributes
+          end
         end
-        only = [options[:only] || self.columns.map { |column| column.name.to_sym }].flatten
-        except = [options[:except] || []].flatten
-        self.nullable_attributes = only - except
+        
         include ActiveRecord::Acts::InstanceMethods
       end
     end
@@ -44,7 +51,7 @@ module ActiveRecord
       def write_attribute(name, value)
         if self.class.nullable_attributes.include? name.to_sym
           column = column_for_attribute(name)
-          if column && column.type == :string && column.null == true
+          if column && (column.type == :string || column.type == :text) && column.null == true
             value = nil if value == ''
           end
         end
