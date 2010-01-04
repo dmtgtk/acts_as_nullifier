@@ -1,16 +1,16 @@
 = acts_as_nullifier
 
-This Rails plugin makes ActiveRecord to store NULL values to the database instead of empty strings.
-Only :string attributes that allow NULLs are affected.
+This trivial Rails plugin makes ActiveRecord to store NULL values to the database instead of empty strings.
+Only :string and :text attributes that allow NULLs are affected.
 
 === Usage:
 
-  # nullify all nullable :string attributes except :name
+  # nullify all nullable attributes except :name
   class Group < ActiveRecord::Base
     acts_as_nullifier :except => :name
   end
 
-  # nullify only :first_name and :last_name, leave all other strings alone
+  # nullify only :first_name and :last_name
   class User < ActiveRecord::Base
     acts_as_nullifier :only => [:first_name, :last_name]
   end
